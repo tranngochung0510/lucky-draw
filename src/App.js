@@ -17,7 +17,7 @@ function App() {
 			</div>
 			<div className="box">
 				<div className="separate"></div>
-				<button className="btn-start" onClick={() => setTimeout(() => setShow(true), 7000)}>Quay</button>
+				<button className="btn-start" onClick={() => setTimeout(() => setShow(true), 7500)}>Quay</button>
 			</div>
 			{show
 				? <>
