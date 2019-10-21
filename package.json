@@ -3,12 +3,12 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
-		"number-flip": "^1.1.7",
+		"number-flip": "1.1.7",
 		"react": "^16.10.2",
-		"react-confetti": "^5.0.1",
+		"react-confetti": "5.0.1",
 		"react-dom": "^16.10.2",
 		"react-scripts": "3.2.0",
-		"react-use": "^12.7.1"
+		"react-use": "12.7.1"
 	},
 	"scripts": {
 		"start": "react-scripts start",
