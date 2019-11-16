@@ -1,14 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import Confetti from 'react-confetti';
 import headerImg from './images/header.png';
 import reward from './images/reward.png';
-
+import axios from 'axios';
+import { Flip } from "number-flip";
+import EventNameInput from "./EventNameInput.jsx"
 import './App.css';
 
 function App() {
 	const { width, height } = useWindowSize();
 	const [show, setShow] = useState(false);
+	const [customers , getCustomer] = React.useState({});
+	useEffect(() => {
+		
+
+		const $ = s => document.querySelector(s);
+		const sepa = new Flip({
+			node: $(".separate"),
+			from: 999999,
+			separator: "",
+			direct: false,
+			duration: 7,
+		});
+
+		$(".btn-start").onclick = () => {
+			let result = ~~(Math.random() * 999999);
+			sepa.flipTo({
+				to: result
+			});
+			window.localStorage.setItem('result', result);
+		}
+	}, [])  
+	function spin(){	
+	 	setTimeout(() => {
+			console.log("object")
+			setShow(true)
+		 }, 7500)
+	}
+	function getCustomers(data){
+		const customerQuery =`{getCustomers{
+			name
+			phone
+			code
+		  }}`;
+		axios.get(`http://localhost:3001/graphql?query=${customerQuery}`).then(res=>{
+		
+		}).catch(error=>{
+			console.log(error);
+			alert(`Error`);
+		});
+	}
 	return (
 		<>
 			<div className="header">
@@ -17,7 +59,10 @@ function App() {
 			</div>
 			<div className="box">
 				<div className="separate"></div>
-				<button className="btn-start" onClick={() => setTimeout(() => setShow(true), 7500)}>Quay</button>
+				<button className="btn-start" onClick={()=>{spin()}}>Quay</button>
+				<EventNameInput 
+					getCustomers = {(data)=>{getCustomers(data)}}
+				></EventNameInput>
 			</div>
 			{show
 				? <>
@@ -35,6 +80,7 @@ function App() {
 						<button className="btn-close" onClick={() => { setShow(false) }}>Đóng</button>
 					</div>
 					<div className="mask"></div>
+					
 				</>
 				: <div></div>
 			}
