@@ -1,27 +1,25 @@
-import React, { useState,useEffect } from 'react';
-import useWindowSize from 'react-use/lib/useWindowSize';
-import Confetti from 'react-confetti';
-import headerImg from './images/header.png';
-import reward from './images/reward.png';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import useWindowSize from "react-use/lib/useWindowSize";
+import Confetti from "react-confetti";
+import headerImg from "./images/header.png";
+import reward from "./images/reward.png";
+import axios from "axios";
 import { Flip } from "number-flip";
-import EventNameInput from "./EventNameInput.jsx"
-import './App.css';
+import EventNameInput from "./EventNameInput.jsx";
+import "./App.css";
 
 function App() {
 	const { width, height } = useWindowSize();
 	const [show, setShow] = useState(false);
-	const [customers , getCustomer] = React.useState({});
+	const [customers, getCustomer] = useState({});
 	useEffect(() => {
-		
-
 		const $ = s => document.querySelector(s);
 		const sepa = new Flip({
 			node: $(".separate"),
 			from: 999999,
 			separator: "",
 			direct: false,
-			duration: 7,
+			duration: 7
 		});
 
 		$(".btn-start").onclick = () => {
@@ -29,27 +27,30 @@ function App() {
 			sepa.flipTo({
 				to: result
 			});
-			window.localStorage.setItem('result', result);
-		}
-	}, [])  
-	function spin(){	
-	 	setTimeout(() => {
-			console.log("object")
-			setShow(true)
-		 }, 7500)
+			window.localStorage.setItem("result", result);
+		};
+	}, []);
+	function spin() {
+		setTimeout(() => {
+			setShow(true);
+		}, 7500);
 	}
-	function getCustomers(data){
-		const customerQuery =`{getCustomers{
-			name
-			phone
-			code
+	function getCustomers(data) {
+		const customerQuery = `{getCustomers{
+			name,
+			phone,
+			code,
+			eventName
 		  }}`;
-		axios.get(`http://localhost:3001/graphql?query=${customerQuery}`).then(res=>{
-		
-		}).catch(error=>{
-			console.log(error);
-			alert(`Error`);
-		});
+		axios
+			.get(`http://localhost:3001/graphql?query=${customerQuery}`)
+			.then(res => {
+				console.log(res);
+			})
+			.catch(error => {
+				console.log(error);
+				alert(`Error`);
+			});
 	}
 	return (
 		<>
@@ -59,32 +60,59 @@ function App() {
 			</div>
 			<div className="box">
 				<div className="separate"></div>
-				<button className="btn-start" onClick={()=>{spin()}}>Quay</button>
-				<EventNameInput 
-					getCustomers = {(data)=>{getCustomers(data)}}
+				<button
+					className="btn-start"
+					onClick={() => {
+						spin();
+					}}
+				>
+					Quay
+				</button>
+				<EventNameInput
+					getCustomers={data => {
+						getCustomers(data);
+					}}
 				></EventNameInput>
 			</div>
-			{show
-				? <>
+			{show ? (
+				<>
 					<div className="confetti">
 						<Confetti width={width} height={height} />
 					</div>
 					<div className="reward">
-						<img src={reward} alt="" ></img>
+						<img src={reward} alt=""></img>
 						<div className="info">
-							<div><span>Kết quả :</span><b>{window.localStorage.getItem('result')}</b></div>
-							<div><span>Họ và tên	:</span><b>Hardcode</b></div>
-							<div><span>Số điện thoại :</span><b>Hardcode</b></div>
-							<div><span>Mã dự thưởng :</span><b>Hardcode</b></div>
+							<div>
+								<span>Kết quả :</span>
+								<b>{window.localStorage.getItem("result")}</b>
+							</div>
+							<div>
+								<span>Họ và tên :</span>
+								<b>Hardcode</b>
+							</div>
+							<div>
+								<span>Số điện thoại :</span>
+								<b>Hardcode</b>
+							</div>
+							<div>
+								<span>Mã dự thưởng :</span>
+								<b>Hardcode</b>
+							</div>
 						</div>
-						<button className="btn-close" onClick={() => { setShow(false) }}>Đóng</button>
+						<button
+							className="btn-close"
+							onClick={() => {
+								setShow(false);
+							}}
+						>
+							Đóng
+						</button>
 					</div>
 					<div className="mask"></div>
-					
 				</>
-				: <div></div>
-			}
-
+			) : (
+				<div></div>
+			)}
 		</>
 	);
 }
