@@ -11,33 +11,34 @@ import "./App.css";
 function App() {
 	const { width, height } = useWindowSize();
 	const [show, setShow] = useState(false);
-	const [customers, getCustomer] = useState({});
-	useEffect(() => {
+	const [customer, setCustomer] = useState({});
+	/* useEffect(() => {
 		const $ = s => document.querySelector(s);
-		const sepa = new Flip({
+		var sepa = new Flip({
 			node: $(".separate"),
 			from: 999999,
 			separator: "",
 			direct: false,
 			duration: 7
 		});
-
 		$(".btn-start").onclick = () => {
-			let result = ~~(Math.random() * 999999);
+			let result = ~~(Math.random() * 9999999);
+
 			sepa.flipTo({
 				to: result
 			});
-			window.localStorage.setItem("result", result);
+			// window.localStorage.setItem("result", result);
 		};
-	}, []);
+	}, []); */
+
 	function spin() {
 		setTimeout(() => {
 			setShow(true);
 		}, 7500);
 	}
 	function getCustomers(data) {
-		console.log(data)
-		axios.post(`http://localhost:3001/graphql`,{
+		axios
+			.post(`http://localhost:3001/graphql`, {
 				query: `
 					query GetCustomerByEvent($eventName: String!) {
 						getCustomerByEvent(eventName: $eventName) {
@@ -51,7 +52,12 @@ function App() {
 				}
 			})
 			.then(res => {
-				console.log(res);
+				let customers = res.data.data.getCustomerByEvent;
+				let index = Math.floor(Math.random() * customers.length);
+				let winner = customers[index];
+				setCustomer(winner);
+				console.log("winner", winner.code);
+				window.localStorage.setItem("result", parseInt(winner.code));
 			})
 			.catch(error => {
 				console.log(error);
@@ -88,21 +94,21 @@ function App() {
 					<div className="reward">
 						<img src={reward} alt=""></img>
 						<div className="info">
-							<div>
+							{/* <div>
 								<span>Kết quả :</span>
 								<b>{window.localStorage.getItem("result")}</b>
-							</div>
+							</div> */}
 							<div>
 								<span>Họ và tên :</span>
-								<b>Hardcode</b>
+								<b>{customer.name}</b>
 							</div>
 							<div>
 								<span>Số điện thoại :</span>
-								<b>Hardcode</b>
+								<b>{customer.phone}</b>
 							</div>
 							<div>
 								<span>Mã dự thưởng :</span>
-								<b>Hardcode</b>
+								<b>{customer.code}</b>
 							</div>
 						</div>
 						<button
