@@ -36,14 +36,20 @@ function App() {
 		}, 7500);
 	}
 	function getCustomers(data) {
-		const customerQuery = `{getCustomers{
-			name,
-			phone,
-			code,
-			eventName
-		  }}`;
-		axios
-			.get(`http://localhost:3001/graphql?query=${customerQuery}`)
+		console.log(data)
+		axios.post(`http://localhost:3001/graphql`,{
+				query: `
+					query GetCustomerByEvent($eventName: String!) {
+						getCustomerByEvent(eventName: $eventName) {
+							name,
+							phone,
+							code
+					}
+					}`,
+				variables: {
+					eventName: data
+				}
+			})
 			.then(res => {
 				console.log(res);
 			})
