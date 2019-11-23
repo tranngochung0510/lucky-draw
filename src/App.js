@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
-import useWindowSize from "react-use/lib/useWindowSize";
-import Confetti from "react-confetti";
-import headerImg from "./images/header.png";
-import reward from "./images/reward.png";
-import axios from "axios";
-import { Flip } from "number-flip";
-import EventNameInput from "./EventNameInput.jsx";
-import "./App.css";
+import React, { useState, useEffect } from 'react';
+import useWindowSize from 'react-use/lib/useWindowSize';
+import Confetti from 'react-confetti';
+import headerImg from './images/header.png';
+import reward from './images/reward.png';
+import axios from 'axios';
+// import { Flip } from 'number-flip';
+import EventNameInput from './EventNameInput.jsx';
+import './App.css';
 
 function App() {
 	const { width, height } = useWindowSize();
 	const [show, setShow] = useState(false);
 	const [customer, setCustomer] = useState({});
+	const [events, setEvents] = useState([]);
+	const [customers, setCustomers] = useState([]);
+	const [disable, setDisable] = useState(true);
 	/* useEffect(() => {
 		const $ = s => document.querySelector(s);
 		var sepa = new Flip({
@@ -31,7 +34,32 @@ function App() {
 		};
 	}, []); */
 
+	useEffect(() => {
+		axios
+			.get(
+				'http://localhost:3001/graphql?query={getEvents{eventName,id}}'
+			)
+			.then(res => {
+				// console.log(res.data.data.getEvents);
+				setEvents(res.data.data.getEvents);
+			})
+			.catch(error => console.log(error));
+	}, []);
+
+	function findWinner() {
+		if (customers === []) return;
+		let tmp = [...customers];
+		tmp.splice(customers.indexOf(customer), 1);
+		let index = Math.floor(Math.random() * tmp.length);
+		let winner = tmp[index];
+		console.log('winner', winner);
+		window.localStorage.setItem('result', parseInt(winner.code));
+		setCustomers(tmp);
+		setCustomer(winner);
+	}
+
 	function spin() {
+		if (customers === []) alert('Het khach hang');
 		setTimeout(() => {
 			setShow(true);
 		}, 7500);
@@ -52,16 +80,18 @@ function App() {
 				}
 			})
 			.then(res => {
-				let customers = res.data.data.getCustomerByEvent;
-				let index = Math.floor(Math.random() * customers.length);
-				let winner = customers[index];
+				let _customers = res.data.data.getCustomerByEvent;
+				let index = Math.floor(Math.random() * _customers.length);
+				let winner = _customers[index];
+				console.log('winner', winner);
+				window.localStorage.setItem('result', parseInt(winner.code));
+				setCustomers(_customers);
+				setDisable(false);
 				setCustomer(winner);
-				console.log("winner", winner.code);
-				window.localStorage.setItem("result", parseInt(winner.code));
 			})
 			.catch(error => {
 				console.log(error);
-				alert(`Error`);
+				alert(`Danh sach khach hang trong`);
 			});
 	}
 	return (
@@ -77,6 +107,7 @@ function App() {
 					onClick={() => {
 						spin();
 					}}
+					disabled={disable}
 				>
 					Quay
 				</button>
@@ -84,6 +115,7 @@ function App() {
 					getCustomers={data => {
 						getCustomers(data);
 					}}
+					events={events}
 				></EventNameInput>
 			</div>
 			{show ? (
@@ -115,6 +147,7 @@ function App() {
 							className="btn-close"
 							onClick={() => {
 								setShow(false);
+								findWinner();
 							}}
 						>
 							Đóng

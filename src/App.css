@@ -107,7 +107,6 @@
 	margin-bottom: 30px;
 }
 
-
 .btn-close {
 	margin-top: 30px;
 	font-family: inherit;
@@ -139,4 +138,20 @@
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 15px;
+}
+
+.event {
+	text-align: center;
+	font-size: 18px;
+	color: white;
+	font-weight: bold;
+}
+
+.btn-start:disabled {
+	cursor: not-allowed;
+}
+
+.btn-start:disabled:hover {
+	background: #fff;
+	color: black;
 }
