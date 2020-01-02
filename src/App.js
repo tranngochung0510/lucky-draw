@@ -8,6 +8,7 @@ import axios from 'axios';
 import EventNameInput from './EventNameInput.jsx';
 import './App.css';
 
+
 function App() {
 	const { width, height } = useWindowSize();
 	const [show, setShow] = useState(false);
@@ -35,12 +36,13 @@ function App() {
 	}, []); */
 
 	useEffect(() => {
+	
 		axios
 			.get(
 				'http://localhost:3001/graphql?query={getEvents{eventName,id}}'
 			)
 			.then(res => {
-				// console.log(res.data.data.getEvents);
+				console.log(res.data.data.getEvents);
 				setEvents(res.data.data.getEvents);
 			})
 			.catch(error => console.log(error));
@@ -49,17 +51,23 @@ function App() {
 	function findWinner() {
 		if (customers === []) return;
 		let tmp = [...customers];
-		tmp.splice(customers.indexOf(customer), 1);
 		let index = Math.floor(Math.random() * tmp.length);
 		let winner = tmp[index];
-		console.log('winner', winner);
 		window.localStorage.setItem('result', parseInt(winner.code));
+		tmp.splice(customers.indexOf(customer), 1);
+		console.log(tmp)
 		setCustomers(tmp);
 		setCustomer(winner);
 	}
 
 	function spin() {
-		if (customers === []) alert('Het khach hang');
+		if (customers.length === 0) 
+		{
+			alert('Het khach hang');
+			return;
+		}
+		// console.log(customers === [])
+		findWinner();
 		setTimeout(() => {
 			setShow(true);
 		}, 7500);
@@ -81,13 +89,14 @@ function App() {
 			})
 			.then(res => {
 				let _customers = res.data.data.getCustomerByEvent;
-				let index = Math.floor(Math.random() * _customers.length);
-				let winner = _customers[index];
-				console.log('winner', winner);
-				window.localStorage.setItem('result', parseInt(winner.code));
+				// let index = Math.floor(Math.random() * _customers.length);
+				// let winner = _customers[index];
+				// console.log('winner', winner);
+				// window.localStorage.setItem('result', parseInt(winner.code));
+				console.log(_customers)
 				setCustomers(_customers);
 				setDisable(false);
-				setCustomer(winner);
+				// setCustomer(winner);
 			})
 			.catch(error => {
 				console.log(error);
@@ -105,9 +114,10 @@ function App() {
 				<button
 					className="btn-start"
 					onClick={() => {
+						// console.log("spin")
 						spin();
 					}}
-					disabled={disable}
+					// disabled={disable}
 				>
 					Quay
 				</button>
@@ -116,7 +126,7 @@ function App() {
 						getCustomers(data);
 					}}
 					events={events}
-				></EventNameInput>
+				/>
 			</div>
 			{show ? (
 				<>
@@ -147,7 +157,7 @@ function App() {
 							className="btn-close"
 							onClick={() => {
 								setShow(false);
-								findWinner();
+								// findWinner();
 							}}
 						>
 							Đóng
