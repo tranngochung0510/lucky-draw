@@ -84,14 +84,14 @@ function App() {
 			})
 			.then(res => {
 				let _customers = res.data.data.getCustomerByEvent;
-				let index = Math.floor(Math.random() * _customers.length);
-				let winner = _customers[index];
-				console.log('winner', winner);
-				window.localStorage.setItem('result', parseInt(winner.code));
-				console.log(_customers);
+				// let index = Math.floor(Math.random() * _customers.length);
+				// let winner = _customers[index];
+				// console.log('winner', winner);
+				// window.localStorage.setItem('result', parseInt(winner.code));
+				// console.log(_customers);
 				setCustomers(_customers);
 				setDisable(false);
-				setCustomer(winner);
+				// setCustomer(winner);
 			})
 			.catch(error => {
 				console.log(error);
