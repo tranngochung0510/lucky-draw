@@ -10,13 +10,13 @@ import './App.css';
 
 
 function App() {
-	const { width, height } = useWindowSize();
-	const [show, setShow] = useState(false);
-	const [customer, setCustomer] = useState({});
-	const [events, setEvents] = useState([]);
-	const [customers, setCustomers] = useState([]);
-	const [disable, setDisable] = useState(true);
-	/* useEffect(() => {
+    const { width, height } = useWindowSize();
+    const [show, setShow] = useState(false);
+    const [customer, setCustomer] = useState({});
+    const [events, setEvents] = useState([]);
+    const [customers, setCustomers] = useState([]);
+    const [disable, setDisable] = useState(true);
+    /* useEffect(() => {
 		const $ = s => document.querySelector(s);
 		var sepa = new Flip({
 			node: $(".separate"),
