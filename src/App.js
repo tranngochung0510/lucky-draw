@@ -8,15 +8,14 @@ import axios from 'axios';
 import EventNameInput from './EventNameInput.jsx';
 import './App.css';
 
-
 function App() {
-    const { width, height } = useWindowSize();
-    const [show, setShow] = useState(false);
-    const [customer, setCustomer] = useState({});
-    const [events, setEvents] = useState([]);
-    const [customers, setCustomers] = useState([]);
-    const [disable, setDisable] = useState(true);
-    /* useEffect(() => {
+	const { width, height } = useWindowSize();
+	const [show, setShow] = useState(false);
+	const [customer, setCustomer] = useState({});
+	const [events, setEvents] = useState([]);
+	const [customers, setCustomers] = useState([]);
+	const [disable, setDisable] = useState(true);
+	/* useEffect(() => {
 		const $ = s => document.querySelector(s);
 		var sepa = new Flip({
 			node: $(".separate"),
@@ -36,11 +35,8 @@ function App() {
 	}, []); */
 
 	useEffect(() => {
-	
 		axios
-			.get(
-				'http://localhost:3001/graphql?query={getEvents{eventName,id}}'
-			)
+			.get('http://localhost:3001/graphql?query={getEvents{eventName,id}}')
 			.then(res => {
 				console.log(res.data.data.getEvents);
 				setEvents(res.data.data.getEvents);
@@ -55,14 +51,13 @@ function App() {
 		let winner = tmp[index];
 		window.localStorage.setItem('result', parseInt(winner.code));
 		tmp.splice(customers.indexOf(customer), 1);
-		console.log(tmp)
+		console.log(tmp);
 		setCustomers(tmp);
 		setCustomer(winner);
 	}
 
 	function spin() {
-		if (customers.length === 0) 
-		{
+		if (customers.length === 0) {
 			alert('Het khach hang');
 			return;
 		}
@@ -89,14 +84,14 @@ function App() {
 			})
 			.then(res => {
 				let _customers = res.data.data.getCustomerByEvent;
-				// let index = Math.floor(Math.random() * _customers.length);
-				// let winner = _customers[index];
-				// console.log('winner', winner);
-				// window.localStorage.setItem('result', parseInt(winner.code));
-				console.log(_customers)
+				let index = Math.floor(Math.random() * _customers.length);
+				let winner = _customers[index];
+				console.log('winner', winner);
+				window.localStorage.setItem('result', parseInt(winner.code));
+				console.log(_customers);
 				setCustomers(_customers);
 				setDisable(false);
-				// setCustomer(winner);
+				setCustomer(winner);
 			})
 			.catch(error => {
 				console.log(error);
@@ -111,16 +106,25 @@ function App() {
 			</div>
 			<div className="box">
 				<div className="separate"></div>
-				<button
-					className="btn-start"
-					onClick={() => {
-						// console.log("spin")
-						spin();
-					}}
-					// disabled={disable}
-				>
-					Quay
-				</button>
+				<div>
+					<button
+						className="btn-start"
+						onClick={() => {
+							// console.log("spin")
+							spin();
+						}}
+						disabled={disable}
+					>
+						Quay
+					</button>
+					<select name="prize" className="btn-start select-prize">
+						<option value="1" defaultValue>
+							Giải nhất
+						</option>
+						<option value="2">Giải nhì</option>
+						<option value="3">Giải ba</option>
+					</select>
+				</div>
 				<EventNameInput
 					getCustomers={data => {
 						getCustomers(data);

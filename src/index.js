@@ -1,26 +1,26 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import { Flip } from "number-flip";
-import * as serviceWorker from "./serviceWorker";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import { Flip } from 'number-flip';
+import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById("root"), function() {
+ReactDOM.render(<App />, document.getElementById('root'), function() {
 	const $ = s => document.querySelector(s);
 	var sepa = new Flip({
-		node: $(".separate"),
+		node: $('.separate'),
 		from: 999999,
-		separator: "",
+		separator: '',
 		direct: false,
 		duration: 7
 	});
-	$(".btn-start").onclick = () => {
-		let result = window.localStorage.getItem("result") || 0;
+	$('.btn-start').onclick = () => {
+		let result = window.localStorage.getItem('result') || 999999;
 
 		sepa.flipTo({
 			to: result
 		});
-		// window.localStorage.setItem("result", result);
+		window.localStorage.setItem("result", result);
 	};
 });
 
